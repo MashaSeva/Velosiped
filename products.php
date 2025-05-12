@@ -1,5 +1,4 @@
 <?php
-// Include the necessary classes
 require_once 'src/models/product.php';
 require_once 'src/products_table.php';
 require_once 'src/db_rep.php';
@@ -8,9 +7,7 @@ $db_rep = new DbRepository();
 
 $productsTable = $db_rep->products;
 
-// CRUD operations based on requests
 
-// Handle form submissions
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['action']) && $_POST['action'] == 'add') {
         $product = new Product();
@@ -37,40 +34,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Fetch all products for displaying and editing
 $products = $productsTable->readAll();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
-    <title>Products Management</title>
+    <title>Products</title>
 </head>
 <body>
-<h1>Manage Products</h1>
+<header>
+    <div class="logo">
+        <img src="img/logo.jpg" alt="Logo"> 
+    </div>
+<h1>Продукты</h1>
+    <nav class="nav-links">
+        <a href="index.php">Главная</a>
+        <a href="staff.php">Сотрудники</a>
+        <a href="clients.php">Клиенты</a>
+	   <a href="orders.php">Заказы</a>
+	   <a href="products.php">Продукты</a>
+	   <a href="element.php">Элементы</a>
+    </nav>
+</header>
 
-<h2>Add Product</h2>
+<section class='registration'>
+<h2>Добавление продукта</h2>
 <form method="post">
-    <input type="text" name="produser" placeholder="Producer" required>
-    <input type="text" name="name_product" placeholder="Name" required>
+    <input type="text" name="produser" placeholder="Производитель" required>
+    <input type="text" name="name_product" placeholder="Название" required>
     <input type="date" name="data_end" required>
-    <input type="number" step="0.01" name="price" placeholder="Price" required>
-    <input type="number" step="0.01" name="weight" placeholder="Weight" required>
+    <input type="number" step="0.01" name="price" placeholder="Цена" required>
+    <input type="number" step="0.01" name="weight" placeholder="Вес" required>
     <input type='hidden' name='action' value='add'>
-    <button type="submit">Add Product</button>
+    <button type="submit">Добавить продукта</button>
 </form>
+</section>
 
-<h2>View and Edit Products</h2>
+<h2>Список продуктов</h2>
 <table>
     <tr>
         <th>ID</th>
-        <th>Producer</th>
-        <th>Name</th>
-        <th>Date End</th>
-        <th>Price</th>
-        <th>Weight</th>
-        <th>Actions</th>
+        <th>Производитель</th>
+        <th>Название</th>
+        <th>Годен до</th>
+        <th>Цена</th>
+        <th>Вес</th>
+        <th></th>
     </tr>
     <?php
     foreach ($products as $product) {
@@ -85,12 +97,12 @@ $products = $productsTable->readAll();
             <form method='post'>
                 <input type='hidden' name='id_product' value='" . $product->id_product . "'>
                 <input type='hidden' name='action' value='edit'>
-                <button type='submit'>Edit</button>
+                <button type='submit' class='edit-btn'>Редактировать</button>
             </form>
-            <form method='post' onsubmit='return confirm(\"Are you sure you want to delete this product?\")'>
+            <form method='post' onsubmit='return confirm(\"Вы уверены, что хотите удалить этот продукт?\")'>
                 <input type='hidden' name='id_product' value='" . $product->id_product . "'>
                 <input type='hidden' name='action' value='delete'>
-                <button type='submit'>Delete</button>
+                <button type='submit' class='delete-btn'>Удалить</button>
             </form>
           </td>";
         echo "</tr>";
@@ -101,11 +113,10 @@ $products = $productsTable->readAll();
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'edit') {
     $product_id = $_POST['id_product'];
-    $product = $productsTable->read($product_id); // Fetch the product details by ID
-
-    // Display the edit form with pre-filled values
+    $product = $productsTable->read($product_id);
     echo "
-    <h2>Edit Product</h2>
+<section class='registration'>
+    <h2>Редактирование продукта</h2>
     <form method='post'>
         <input type='hidden' name='id_product' value='" . $product->id_product . "'>
         <input type='text' name='produser' value='" . $product->produser . "' required>
@@ -114,19 +125,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
         <input type='number' step='0.01' name='price' value='" . $product->price . "' required>
         <input type='number' step='0.01' name='weight' value='" . $product->weight . "' required>
         <input type='hidden' name='action' value='edit_save'>
-        <button type='submit'>Save Changes</button>
-    </form>";
+        <button type='submit'>Сохранить изменения</button>
+    </form>
+</section>";
 }
 ?>
 
-<!-- Back button -->
-<button onclick="goBack()">Go Back</button>
 
-<script>
-    // JavaScript function to go back to localhost
-    function goBack() {
-        window.location.href = 'http://localhost/лиза/index.php';
-    }
-</script>
 </body>
 </html>

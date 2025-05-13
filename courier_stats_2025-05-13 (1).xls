@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Отчёт по курьерам за период 01.04.2025 - 31.05.2025</title>
+        <style>
+            body { font-family: Arial, sans-serif; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #4CAF50; color: white; }
+            tr:nth-child(even) { background-color: #f2f2f2; }
+        </style>
+    </head>
+    <body><h2>Отчёт по курьерам за период 01.04.2025 - 31.05.2025</h2><table><tr><th>№</th><th>Кол-во заказов</th><th>Сумма доставок</th><th>Среднее сумма</th></tr><tr><td>1</td><td>4</td><td>2,983.00 ₽</td><td>745.75 ₽</td></tr></table></body></html>

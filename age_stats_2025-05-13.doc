@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Статистика по возрасту клиентов
+Средний возраст: 10.2 лет
+Минимальный возраст: 0 лет
+Максимальный возраст: 25 лет</title>
+        <style>
+            body { font-family: Arial, sans-serif; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #4CAF50; color: white; }
+            tr:nth-child(even) { background-color: #f2f2f2; }
+        </style>
+    </head>
+    <body><h2>Статистика по возрасту клиентов
+Средний возраст: 10.2 лет
+Минимальный возраст: 0 лет
+Максимальный возраст: 25 лет</h2><table><tr><th>Возрастная группа</th><th>Количество клиентов</th><th>Процент</th></tr><tr><td>18-25 лет</td><td>2</td><td>33.33%</td></tr><tr><td>Младше 18</td><td>4</td><td>66.67%</td></tr><tr><td>Всего клиентов</td><td>6</td><td>100%</td></tr></table></body></html>

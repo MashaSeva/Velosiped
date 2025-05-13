@@ -4,13 +4,15 @@ include_once "models/client.php";
 
 class ClientsTable
 {
+    private PDO $pdo;
     private mysqli $connection;
 
-    public function __construct(mysqli $connection)
+	public function __construct(mysqli $connection)
     {
         $this->connection = $connection;
     }
 
+    
     public function create(Client $client)
     {
         $query = "INSERT INTO client (Name, Tel, Email, Password, Data_BD) VALUES (?, ?, ?, ?, ?)";
@@ -86,5 +88,68 @@ class ClientsTable
         $stmt->bind_param("i", $id);
         $stmt->execute();
     }
+
+	public function findByEmail(string $email): ?Client
+{
+    $sql = "SELECT * FROM client WHERE email = ?";
+    $stmt = $this->connection->prepare($sql);
+    $stmt->bind_param("s", $email); 
+    $stmt->execute();
+    
+    $result = $stmt->get_result(); 
+    $row = $result->fetch_assoc();
+
+    if ($row) {
+        $client = new Client();
+        $client->id_client = (int)$row['id_client'];
+        $client->name = $row['name'];
+        $client->tel = $row['tel'];
+        $client->email = $row['email'];
+        $client->data_bd = new DateTime($row['data_bd']);
+        $client->password = $row['password'];
+        return $client;
+    }
+
+    return null; 
+}
+
+
+public function getAgeStatistics(): array
+{
+    $query = "SELECT 
+                AVG(YEAR(CURRENT_DATE) - YEAR(Data_BD)) as average_age,
+                MIN(YEAR(CURRENT_DATE) - YEAR(Data_BD)) as min_age,
+                MAX(YEAR(CURRENT_DATE) - YEAR(Data_BD)) as max_age,
+                COUNT(*) as total_clients
+              FROM client";
+    
+    $result = $this->connection->query($query);
+    $stats = $result->fetch_assoc();
+    
+    $ageGroupsQuery = "SELECT 
+                        CASE
+                            WHEN YEAR(CURRENT_DATE) - YEAR(Data_BD) < 18 THEN 'Младше 18'
+                            WHEN YEAR(CURRENT_DATE) - YEAR(Data_BD) BETWEEN 18 AND 25 THEN '18-25 лет'
+                            WHEN YEAR(CURRENT_DATE) - YEAR(Data_BD) BETWEEN 26 AND 35 THEN '26-35 лет'
+                            WHEN YEAR(CURRENT_DATE) - YEAR(Data_BD) BETWEEN 36 AND 45 THEN '36-45 лет'
+                            WHEN YEAR(CURRENT_DATE) - YEAR(Data_BD) BETWEEN 46 AND 55 THEN '46-55 лет'
+                            ELSE 'Старше 55 лет'
+                        END as age_group,
+                        COUNT(*) as count
+                      FROM client
+                      GROUP BY age_group
+                      ORDER BY age_group";
+    
+    $groupsResult = $this->connection->query($ageGroupsQuery);
+    $ageGroups = [];
+    while ($row = $groupsResult->fetch_assoc()) {
+        $ageGroups[$row['age_group']] = $row['count'];
+    }
+    
+    $stats['age_groups'] = $ageGroups;
+    
+    return $stats;
+}
+
 }
 ?>

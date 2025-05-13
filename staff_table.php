@@ -14,8 +14,8 @@ class StaffTable
     public function create(Staff $staff): bool
     {
         $stmt = $this->connection->prepare("INSERT INTO staff (Name, Tel_Staff, title, Password_Staff) VALUES (?, ?, ?, ?)");
-        $val = $staff->title->value;
-        $stmt->bind_param("ssis", $staff->name, $staff->tel_staff, $val, $staff->password);
+        $title = $staff->title ? 1 : 0;
+        $stmt->bind_param("ssis", $staff->name, $staff->tel_staff, $title, $staff->password);
 
         return $stmt->execute();
     }
@@ -69,17 +69,25 @@ class StaffTable
         $staff->name = $row['Name'];
         $staff->password = $row['Password_Staff'];
         $staff->tel_staff = $row['Tel_Staff']; 
+	   $staff->title = (bool)$row['Title'];
 
-
-   $title = !empty($row['title']) ? $row['title'] : 'Courier';  // если пустое, то 'Courier' по умолчанию
-$staff->title = TitleType::from($title);
-
-    
-        
-    
 
     return $staff;
 
     }
+
+public function findByPhone(string $phone): ?Staff
+{
+    $stmt = $this->connection->prepare("SELECT * FROM staff WHERE Tel_Staff = ?");
+    $stmt->bind_param("s", $phone);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 0) {
+        return null;
+    }
+
+    return $this->mapRowToStaff($result->fetch_assoc());
+}
 }
 ?>

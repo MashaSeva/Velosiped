@@ -42,7 +42,7 @@ class ElementsTable
         $result = $stmt->get_result();
 
         if ($result->num_rows === 0) {
-            return null; // Element not found
+            return null; 
         }
 
         $data = $result->fetch_assoc();

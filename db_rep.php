@@ -16,7 +16,7 @@ class DbRepository
     private mysqli $db;
 
     public ClientsTable $clients;
-
+	  private PDO $pdo;
     public ProductsTable $products;
 
     public StaffTable $staff;
@@ -40,6 +40,8 @@ class DbRepository
         $this->staff = new StaffTable($this->db);
         $this->orders = new OrdersTable($this->db);
         $this->elements = new ElementsTable($this->db);
+
+
     }
 }
 ?>
